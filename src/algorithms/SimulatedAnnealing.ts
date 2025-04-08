@@ -123,7 +123,11 @@ const getPivotBasedNeighbor = (tour: Step[], boardSize: number): Step[] => {
     
     // Choose a random unvisited move
     const nextMove = moves[Math.floor(Math.random() * moves.length)];
-    neighbor.push({ ...nextMove, stepNumber: neighbor.length + 1 });
+    neighbor.push({ 
+      row: nextMove.row, 
+      col: nextMove.col, 
+      stepNumber: neighbor.length + 1 
+    });
     visited.add(positionToKey(nextMove));
     currentPos = nextMove;
   }

@@ -119,26 +119,20 @@ const Chessboard: React.FC<ChessboardProps> = ({
             }}
             onClick={() => handleCellClick(position)}
           >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-xs text-gray-500 opacity-60">
-                {row},{col}
-              </div>
-            </div>
-            
-            {/* Knight position */}
-            {(isStart || isCurrent) && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Knight color={algorithmColor} size={cellSize * 0.7} />
-              </div>
-            )}
-            
-            {/* Step number for visited cells */}
-            {stepNumber && !isCurrent && (
+            {/* Step number for all visited cells */}
+            {stepNumber && (
               <div 
                 className="absolute inset-0 flex items-center justify-center font-bold text-xs z-10"
                 style={{ color: algorithmColor }}
               >
                 {stepNumber}
+              </div>
+            )}
+            
+            {/* Knight position */}
+            {(isStart || isCurrent) && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Knight color={algorithmColor} size={cellSize * 0.7} />
               </div>
             )}
             
