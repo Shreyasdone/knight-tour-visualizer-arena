@@ -181,8 +181,8 @@ const Index: React.FC = () => {
         </header>
         
         <main className="space-y-8">
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-1 space-y-6">
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1 space-y-6">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Select Starting Position</h2>
                 <div className="flex justify-center">
@@ -242,72 +242,79 @@ const Index: React.FC = () => {
               )}
             </div>
             
-            <div className="md:col-span-2">
+            <div className="lg:col-span-2">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md space-y-6">
                 <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Algorithm Comparison</h2>
                 
                 {results.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="col-span-full lg:col-span-1">
-                      <AlgorithmPanel
-                        name="Brute Force"
-                        boardSize={boardSize}
-                        startPosition={startPosition!}
-                        result={results.find(r => r.name === 'Brute Force') || null}
-                        isLoading={isComputing}
-                        currentStep={currentStep}
-                        playbackState={playbackState}
-                      />
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="h-full">
+                        <AlgorithmPanel
+                          name="Brute Force"
+                          boardSize={boardSize}
+                          startPosition={startPosition!}
+                          result={results.find(r => r.name === 'Brute Force') || null}
+                          isLoading={isComputing}
+                          currentStep={currentStep}
+                          playbackState={playbackState}
+                        />
+                      </div>
+                      
+                      <div className="h-full">
+                        <AlgorithmPanel
+                          name="Divide and Conquer"
+                          boardSize={boardSize}
+                          startPosition={startPosition!}
+                          result={results.find(r => r.name === 'Divide and Conquer') || null}
+                          isLoading={isComputing}
+                          currentStep={currentStep}
+                          playbackState={playbackState}
+                        />
+                      </div>
+                      
+                      <div className="h-full">
+                        <AlgorithmPanel
+                          name="Simulated Annealing"
+                          boardSize={boardSize}
+                          startPosition={startPosition!}
+                          result={results.find(r => r.name === 'Simulated Annealing') || null}
+                          isLoading={isComputing}
+                          currentStep={currentStep}
+                          playbackState={playbackState}
+                        />
+                      </div>
+                      
+                      <div className="h-full">
+                        <AlgorithmPanel
+                          name="Warnsdorff"
+                          boardSize={boardSize}
+                          startPosition={startPosition!}
+                          result={results.find(r => r.name === 'Warnsdorff') || null}
+                          isLoading={isComputing}
+                          currentStep={currentStep}
+                          playbackState={playbackState}
+                        />
+                      </div>
+                      
+                      <div className="h-full md:col-span-2 lg:col-span-1">
+                        <AlgorithmPanel
+                          name="Warnsdorff DFS"
+                          boardSize={boardSize}
+                          startPosition={startPosition!}
+                          result={results.find(r => r.name === 'Warnsdorff DFS') || null}
+                          isLoading={isComputing}
+                          currentStep={currentStep}
+                          playbackState={playbackState}
+                        />
+                      </div>
                     </div>
                     
-                    <div className="col-span-full lg:col-span-1">
-                      <AlgorithmPanel
-                        name="Divide and Conquer"
-                        boardSize={boardSize}
-                        startPosition={startPosition!}
-                        result={results.find(r => r.name === 'Divide and Conquer') || null}
-                        isLoading={isComputing}
-                        currentStep={currentStep}
-                        playbackState={playbackState}
-                      />
+                    <div className="mt-8">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Performance Metrics</h2>
+                      <ComparisonChart results={results} />
                     </div>
-                    
-                    <div className="col-span-full lg:col-span-1">
-                      <AlgorithmPanel
-                        name="Simulated Annealing"
-                        boardSize={boardSize}
-                        startPosition={startPosition!}
-                        result={results.find(r => r.name === 'Simulated Annealing') || null}
-                        isLoading={isComputing}
-                        currentStep={currentStep}
-                        playbackState={playbackState}
-                      />
-                    </div>
-                    
-                    <div className="col-span-full lg:col-span-1">
-                      <AlgorithmPanel
-                        name="Warnsdorff"
-                        boardSize={boardSize}
-                        startPosition={startPosition!}
-                        result={results.find(r => r.name === 'Warnsdorff') || null}
-                        isLoading={isComputing}
-                        currentStep={currentStep}
-                        playbackState={playbackState}
-                      />
-                    </div>
-                    
-                    <div className="col-span-full lg:col-span-1">
-                      <AlgorithmPanel
-                        name="Warnsdorff DFS"
-                        boardSize={boardSize}
-                        startPosition={startPosition!}
-                        result={results.find(r => r.name === 'Warnsdorff DFS') || null}
-                        isLoading={isComputing}
-                        currentStep={currentStep}
-                        playbackState={playbackState}
-                      />
-                    </div>
-                  </div>
+                  </>
                 ) : (
                   <div className="text-center p-8">
                     {isComputing ? (
@@ -324,13 +331,6 @@ const Index: React.FC = () => {
                         </p>
                       </div>
                     )}
-                  </div>
-                )}
-                
-                {results.length > 0 && (
-                  <div className="mt-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Performance Metrics</h2>
-                    <ComparisonChart results={results} />
                   </div>
                 )}
               </div>

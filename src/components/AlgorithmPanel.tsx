@@ -38,7 +38,7 @@ const AlgorithmPanel: React.FC<AlgorithmPanelProps> = ({
   
   const getPathPositions = (): Position[] => {
     if (!result || result.path.length === 0) return [];
-    return result.path.slice(0, currentStep);
+    return result.path.slice(0, currentStep + 1);
   };
 
   // Calculate the current status text and color
@@ -76,14 +76,14 @@ const AlgorithmPanel: React.FC<AlgorithmPanelProps> = ({
   const { text: statusText, color: statusColor } = getStatusInfo();
 
   return (
-    <div className="p-4 border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow">
+    <div className="p-4 border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow h-full flex flex-col">
       <h3 className="text-xl font-bold mb-2" style={{ color: result?.color || 'inherit' }}>
         {name}
       </h3>
       
-      <div className="space-y-4">
+      <div className="flex-grow flex flex-col justify-between">
         {isLoading ? (
-          <div className="h-80 flex items-center justify-center">
+          <div className="flex-grow flex items-center justify-center">
             <Loader message={`Computing ${name}...`} />
           </div>
         ) : (
@@ -107,7 +107,7 @@ const AlgorithmPanel: React.FC<AlgorithmPanelProps> = ({
               
               <div className="font-medium">Step:</div>
               <div>
-                {currentStep + 1} / {result?.path.length || 0}
+                {result ? `${currentStep + 1} / ${result.path.length || 0}` : '0 / 0'}
               </div>
               
               {result && (

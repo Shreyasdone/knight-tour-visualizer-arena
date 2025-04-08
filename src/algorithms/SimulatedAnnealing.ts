@@ -27,8 +27,8 @@ export const solveSimulatedAnnealing = (
   // Main simulated annealing loop
   while (temperature > minTemperature) {
     for (let i = 0; i < stepsPerTemp; i++) {
-      // Generate a neighboring tour by swapping two random steps
-      const neighbor = getNeighbor(currentTour);
+      // Generate improved neighbor using pivot-based approach
+      const neighbor = getPivotBasedNeighbor(currentTour, boardSize);
       const neighborScore = evaluateTour(neighbor, boardSize);
       
       // Calculate acceptance probability
@@ -52,7 +52,7 @@ export const solveSimulatedAnnealing = (
     temperature *= coolingRate;
   }
   
-  // Fix step numbers after possible swaps
+  // Fix step numbers
   const fixedTour = bestTour.map((step, index) => ({
     ...step,
     stepNumber: index + 1
@@ -95,32 +95,49 @@ const getInitialTour = (startPosition: Position, boardSize: number): Step[] => {
   return tour;
 };
 
-// Generate a neighboring tour by swapping two random steps
-const getNeighbor = (tour: Step[]): Step[] => {
-  const neighbor = clonePath(tour);
+// Generate a neighbor using pivot-based approach
+const getPivotBasedNeighbor = (tour: Step[], boardSize: number): Step[] => {
+  // Choose a random pivot point in the tour (not the first position)
+  const pivotIdx = 1 + Math.floor(Math.random() * (tour.length - 1));
   
-  // Don't swap the first position
-  const idx1 = 1 + Math.floor(Math.random() * (neighbor.length - 1));
-  let idx2 = 1 + Math.floor(Math.random() * (neighbor.length - 1));
+  // Create a new tour with the same prefix up to the pivot
+  const neighbor = clonePath(tour.slice(0, pivotIdx));
   
-  // Ensure two different indices
-  while (idx1 === idx2) {
-    idx2 = 1 + Math.floor(Math.random() * (neighbor.length - 1));
+  // Create set of visited positions for O(1) lookups
+  const visited = new Set<string>(
+    neighbor.map(pos => positionToKey(pos))
+  );
+  
+  // Current position is the last one in the prefix
+  let currentPos = { ...neighbor[neighbor.length - 1] };
+  
+  // Extend the tour from the pivot
+  while (neighbor.length < boardSize * boardSize) {
+    // Get valid knight moves from current position
+    const moves = getKnightMoves(currentPos, boardSize).filter(
+      move => !visited.has(positionToKey(move))
+    );
+    
+    // If no valid moves remain, break the loop
+    if (moves.length === 0) break;
+    
+    // Choose a random unvisited move
+    const nextMove = moves[Math.floor(Math.random() * moves.length)];
+    neighbor.push({ ...nextMove, stepNumber: neighbor.length + 1 });
+    visited.add(positionToKey(nextMove));
+    currentPos = nextMove;
   }
-  
-  // Swap positions
-  const temp = { ...neighbor[idx1] };
-  neighbor[idx1] = { ...neighbor[idx2], stepNumber: idx1 + 1 };
-  neighbor[idx2] = { ...temp, stepNumber: idx2 + 1 };
   
   return neighbor;
 };
 
-// Evaluate the quality of a tour (higher is better)
+// Simplified evaluation of tour quality (higher is better)
+// This approach aims to directly reward longer valid paths
 const evaluateTour = (tour: Step[], boardSize: number): number => {
-  let score = tour.length; // Base score is the number of steps
+  const totalCells = boardSize * boardSize;
+  const cost = totalCells - tour.length; // Lower cost for longer tours
   
-  // Check for valid knight moves between steps
+  // Validate that all steps are valid knight moves
   for (let i = 1; i < tour.length; i++) {
     const { row: r1, col: c1 } = tour[i - 1];
     const { row: r2, col: c2 } = tour[i];
@@ -128,30 +145,19 @@ const evaluateTour = (tour: Step[], boardSize: number): number => {
     const rowDiff = Math.abs(r1 - r2);
     const colDiff = Math.abs(c1 - c2);
     
-    // If this is a valid knight move, increase score
-    if ((rowDiff === 1 && colDiff === 2) || (rowDiff === 2 && colDiff === 1)) {
-      score += 1;
-    } else {
-      score -= 5; // Penalty for invalid moves
+    // If this is not a valid knight move, heavily penalize
+    if (!((rowDiff === 1 && colDiff === 2) || (rowDiff === 2 && colDiff === 1))) {
+      return totalCells * 2; // Worst possible score (higher cost)
     }
   }
   
-  // Bonus for complete tours
-  if (tour.length === boardSize * boardSize) {
-    score += 100;
-  }
-  
-  return score;
+  // For valid tours, return negative cost (smaller is better for cost, but we return negative because our algorithm maximizes)
+  return -cost;
 };
 
 // Validate a tour
 const validateTour = (tour: Step[], boardSize: number): { isValid: boolean; issues: string[] } => {
   const issues: string[] = [];
-  
-  // Check length
-  if (tour.length !== boardSize * boardSize) {
-    issues.push(`Tour has ${tour.length} steps, expected ${boardSize * boardSize}`);
-  }
   
   // Check for valid knight moves between consecutive positions
   for (let i = 1; i < tour.length; i++) {
@@ -176,8 +182,14 @@ const validateTour = (tour: Step[], boardSize: number): { isValid: boolean; issu
     visited.add(key);
   }
   
+  // Check if it's a complete tour
+  const isComplete = tour.length === boardSize * boardSize;
+  if (!isComplete) {
+    issues.push(`Tour has ${tour.length} steps, expected ${boardSize * boardSize}`);
+  }
+  
   return {
-    isValid: issues.length === 0,
+    isValid: issues.length === 0 && isComplete, // Valid only if complete and no issues
     issues
   };
 };

@@ -27,23 +27,33 @@ const Chessboard: React.FC<ChessboardProps> = ({
   disabled = false,
   algorithmColor = '#E57373'
 }) => {
-  const maxBoardWidth = 400; // Maximum board width in pixels
-  const cellSize = Math.floor(maxBoardWidth / size);
+  // Calculate cell size based on responsive design
+  const calculateCellSize = () => {
+    // Base size for small boards, adjust for larger boards
+    const baseSize = Math.min(40, 400 / size);
+    return baseSize;
+  };
   
-  // Create visited positions map for O(1) lookups
+  const cellSize = calculateCellSize();
+  
+  // Create position maps for O(1) lookups
   const visitedSet = new Set<string>(
     visitedPositions.map(pos => positionToKey(pos))
   );
   
-  // Create path positions map for O(1) lookups
   const pathSet = new Set<string>(
     pathPositions.map(pos => positionToKey(pos))
   );
   
-  // Create highlighted positions map for O(1) lookups
   const highlightSet = new Set<string>(
     highlightedPositions.map(pos => positionToKey(pos))
   );
+  
+  // Map positions to their step number for rendering path order
+  const positionToStepMap = new Map<string, number>();
+  pathPositions.forEach((pos, index) => {
+    positionToStepMap.set(positionToKey(pos), index + 1);
+  });
 
   const handleCellClick = (position: Position) => {
     if (!disabled) {
@@ -61,7 +71,7 @@ const Chessboard: React.FC<ChessboardProps> = ({
     const isPath = pathSet.has(posKey);
     const isHighlighted = highlightSet.has(posKey);
     
-    let classes = `bg-${baseColor} `;
+    let classes = `${baseColor === 'chessLight' ? 'bg-chessLight' : 'bg-chessDark'} `;
     
     if (isStart) {
       classes += 'ring-2 ring-blue-500 ';
@@ -82,7 +92,7 @@ const Chessboard: React.FC<ChessboardProps> = ({
 
   return (
     <div 
-      className={`grid grid-cols-${size} border border-gray-400 shadow-lg`}
+      className="border border-gray-400 shadow-lg"
       style={{ 
         display: 'grid', 
         gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
@@ -96,6 +106,8 @@ const Chessboard: React.FC<ChessboardProps> = ({
         const position: Position = { row, col };
         const isStart = startPosition && isSamePosition(position, startPosition);
         const isCurrent = currentPosition && isSamePosition(position, currentPosition);
+        const posKey = positionToKey(position);
+        const stepNumber = positionToStepMap.get(posKey);
         
         return (
           <div
@@ -113,13 +125,25 @@ const Chessboard: React.FC<ChessboardProps> = ({
               </div>
             </div>
             
+            {/* Knight position */}
             {(isStart || isCurrent) && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Knight color={algorithmColor} size={cellSize * 0.7} />
               </div>
             )}
             
-            {pathPositions?.some(pos => isSamePosition(pos, position)) && (
+            {/* Step number for visited cells */}
+            {stepNumber && !isCurrent && (
+              <div 
+                className="absolute inset-0 flex items-center justify-center font-bold text-xs z-10"
+                style={{ color: algorithmColor }}
+              >
+                {stepNumber}
+              </div>
+            )}
+            
+            {/* Path visualization */}
+            {pathSet.has(posKey) && (
               <div 
                 className="absolute left-1/2 bottom-1/2 h-2 w-2 rounded-full bg-opacity-70 transform -translate-x-1/2 translate-y-1/2"
                 style={{ backgroundColor: algorithmColor }}
