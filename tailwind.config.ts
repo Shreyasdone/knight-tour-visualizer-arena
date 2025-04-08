@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Chess-themed colors
+				chessLight: '#F0D9B5',
+				chessDark: '#B58863',
+				chessHighlight: 'rgba(155, 199, 232, 0.6)',
+				chessVisited: 'rgba(106, 159, 181, 0.5)',
+				chessCurrent: 'rgba(129, 184, 46, 0.5)',
+				chessMoveHint: 'rgba(248, 213, 132, 0.6)',
+				// Algorithm colors
+				algorithmA: '#E57373', // Brute Force (red)
+				algorithmB: '#64B5F6', // Divide and Conquer (blue)
+				algorithmC: '#81C784', // Simulated Annealing (green)
+				algorithmD: '#FFB74D', // Warnsdorff (orange)
+				algorithmE: '#9575CD'  // DFS (purple)
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -70,25 +84,22 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'knight-bounce': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-5px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'knight-bounce': 'knight-bounce 2s ease-in-out infinite'
 			}
 		}
 	},
