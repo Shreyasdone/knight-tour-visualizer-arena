@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { AlgorithmResult } from '../utils/types';
 
 interface ComparisonChartProps {
@@ -53,7 +53,7 @@ const ComparisonChart: React.FC<ComparisonChartProps> = ({ results }) => {
               isAnimationActive={true} 
             >
               {executionTimeData.map((entry, index) => (
-                <Bar key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Bar>
           </BarChart>
@@ -83,7 +83,7 @@ const ComparisonChart: React.FC<ComparisonChartProps> = ({ results }) => {
               radius={[4, 4, 0, 0]} 
             >
               {successData.map((entry, index) => (
-                <Bar key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Bar>
           </BarChart>
