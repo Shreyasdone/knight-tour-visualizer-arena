@@ -16,7 +16,7 @@ export type AlgorithmResult = {
   color: string;
 };
 
-export type BoardSize = 5 | 6 | 8 | number;
+export type BoardSize = 3 | 4 | 5 | 6 | 7 | 8 | number;
 
 export enum AnimationSpeed {
   Slow = 1000,
@@ -26,7 +26,7 @@ export enum AnimationSpeed {
 
 export enum AlgorithmType {
   BruteForce = 'BruteForce',
-  DivideAndConquer = 'DivideAndConquer',
+  AStar = 'AStar',
   SimulatedAnnealing = 'SimulatedAnnealing',
   Warnsdorff = 'Warnsdorff',
   DFS = 'DFS'

@@ -15,7 +15,7 @@ import {
   AlgorithmType
 } from '@/utils/types';
 import solveBruteForce from '@/algorithms/BruteForce';
-import solveDivideAndConquer from '@/algorithms/DivideAndConquer';
+import solveAStar from '@/algorithms/AStar';
 import solveSimulatedAnnealing from '@/algorithms/SimulatedAnnealing';
 import solveWarnsdorff from '@/algorithms/Warnsdorff';
 import solveDFS from '@/algorithms/DFS';
@@ -94,7 +94,7 @@ const Index: React.FC = () => {
     setTimeout(async () => {
       try {
         const bruteForceResult = solveBruteForce(startPosition, boardSize);
-        const divideAndConquerResult = solveDivideAndConquer(startPosition, boardSize);
+        const aStarResult = solveAStar(startPosition, boardSize);
         const simulatedAnnealingResult = solveSimulatedAnnealing(startPosition, boardSize);
         const warnsdorffResult = solveWarnsdorff(startPosition, boardSize);
         const dfsResult = solveDFS(startPosition, boardSize);
@@ -102,7 +102,7 @@ const Index: React.FC = () => {
         // Collect all results
         const allResults = [
           bruteForceResult,
-          divideAndConquerResult,
+          aStarResult,
           simulatedAnnealingResult,
           warnsdorffResult,
           dfsResult
@@ -165,6 +165,19 @@ const Index: React.FC = () => {
     document.documentElement.classList.toggle('dark');
   };
   
+  // Validate board size
+  const handleBoardSizeChange = (size: number) => {
+    if (size >= 3 && size <= 8) {
+      setBoardSize(size as BoardSize);
+    } else {
+      toast({
+        title: "Invalid Board Size",
+        description: "Board size must be between 3x3 and 8x8",
+        variant: "destructive"
+      });
+    }
+  };
+  
   useEffect(() => {
     // Run algorithms automatically when starting position is set and instant mode is enabled
     if (startPosition && instantMode && !isComputing && results.length === 0) {
@@ -200,7 +213,7 @@ const Index: React.FC = () => {
               
               <ControlPanel 
                 boardSize={boardSize}
-                onBoardSizeChange={setBoardSize}
+                onBoardSizeChange={handleBoardSizeChange}
                 playbackState={playbackState}
                 onPlay={() => setPlaybackState('playing')}
                 onPause={() => setPlaybackState('paused')}
@@ -263,10 +276,10 @@ const Index: React.FC = () => {
                       
                       <div className="h-full">
                         <AlgorithmPanel
-                          name="Divide and Conquer"
+                          name="A* Search"
                           boardSize={boardSize}
                           startPosition={startPosition!}
-                          result={results.find(r => r.name === 'Divide and Conquer') || null}
+                          result={results.find(r => r.name === 'A* Search') || null}
                           isLoading={isComputing}
                           currentStep={currentStep}
                           playbackState={playbackState}

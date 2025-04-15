@@ -122,8 +122,11 @@ const Chessboard: React.FC<ChessboardProps> = ({
             {/* Step number for all visited cells */}
             {stepNumber && (
               <div 
-                className="absolute inset-0 flex items-center justify-center font-bold text-xs z-10"
-                style={{ color: algorithmColor }}
+                className="absolute inset-0 flex items-center justify-center font-bold z-10"
+                style={{ 
+                  color: algorithmColor,
+                  fontSize: `${Math.max(10, cellSize * 0.4)}px` 
+                }}
               >
                 {stepNumber}
               </div>
@@ -134,14 +137,6 @@ const Chessboard: React.FC<ChessboardProps> = ({
               <div className="absolute inset-0 flex items-center justify-center">
                 <Knight color={algorithmColor} size={cellSize * 0.7} />
               </div>
-            )}
-            
-            {/* Path visualization */}
-            {pathSet.has(posKey) && (
-              <div 
-                className="absolute left-1/2 bottom-1/2 h-2 w-2 rounded-full bg-opacity-70 transform -translate-x-1/2 translate-y-1/2"
-                style={{ backgroundColor: algorithmColor }}
-              ></div>
             )}
           </div>
         );

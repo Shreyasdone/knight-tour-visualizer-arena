@@ -22,7 +22,7 @@ import { AnimationSpeed, PlaybackState, BoardSize } from '../utils/types';
 
 interface ControlPanelProps {
   boardSize: BoardSize;
-  onBoardSizeChange: (size: BoardSize) => void;
+  onBoardSizeChange: (size: number) => void;
   playbackState: PlaybackState;
   onPlay: () => void;
   onPause: () => void;
@@ -66,15 +66,18 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           <label className="text-sm font-medium">Board Size</label>
           <Select 
             value={boardSize.toString()} 
-            onValueChange={(value) => onBoardSizeChange(parseInt(value) as BoardSize)}
+            onValueChange={(value) => onBoardSizeChange(parseInt(value))}
             disabled={isComputing}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select board size" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="3">3 x 3</SelectItem>
+              <SelectItem value="4">4 x 4</SelectItem>
               <SelectItem value="5">5 x 5</SelectItem>
               <SelectItem value="6">6 x 6</SelectItem>
+              <SelectItem value="7">7 x 7</SelectItem>
               <SelectItem value="8">8 x 8</SelectItem>
             </SelectContent>
           </Select>
