@@ -111,7 +111,7 @@ const solveAStar = (startPosition: Position, boardSize: number): AlgorithmResult
         { ...move, stepNumber: currentPath.length + 1 }
       ];
       
-      const newVisited = new Set(currentVisited);
+      const newVisited = new Set<string>(currentVisited);
       newVisited.add(moveKey);
       
       // Calculate priority using heuristic
