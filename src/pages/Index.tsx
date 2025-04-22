@@ -370,7 +370,7 @@ const Index: React.FC = () => {
         
         <footer className="pt-12 pb-6 text-center text-gray-500 dark:text-gray-400 text-sm">
           <p>Knight's Tour Algorithm Visualizer &copy; 2025</p>
-          <p className="mt-2">A visual comparison of different algorithms for solving the Knight's Tour problem</p>
+          {/* <p className="mt-2">A visual comparison of different algorithms for solving the Knight's Tour problem</p> */}
         </footer>
       </div>
     </div>
