@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import Chessboard from '@/components/Chessboard';
 import ControlPanel from '@/components/ControlPanel';
@@ -90,14 +89,30 @@ const Index: React.FC = () => {
       description: "Running all knight's tour algorithms...",
     });
     
+    console.log('🔍 Starting all Knight Tour algorithms...');
+    
     // Run algorithms in parallel using web workers or setTimeout for non-blocking UI
     setTimeout(async () => {
       try {
+        console.log('🔄 Running Brute Force algorithm...');
         const bruteForceResult = solveBruteForce(startPosition, boardSize);
+        console.log('✅ Brute Force algorithm completed successfully', bruteForceResult);
+        
+        console.log('🔄 Running A* Search algorithm...');
         const aStarResult = solveAStar(startPosition, boardSize);
+        console.log('✅ A* Search algorithm completed successfully', aStarResult);
+        
+        console.log('🔄 Running Simulated Annealing algorithm...');
         const simulatedAnnealingResult = solveSimulatedAnnealing(startPosition, boardSize);
+        console.log('✅ Simulated Annealing algorithm completed successfully', simulatedAnnealingResult);
+        
+        console.log('🔄 Running Warnsdorff algorithm...');
         const warnsdorffResult = solveWarnsdorff(startPosition, boardSize);
+        console.log('✅ Warnsdorff algorithm completed successfully', warnsdorffResult);
+        
+        console.log('🔄 Running DFS algorithm...');
         const dfsResult = solveDFS(startPosition, boardSize);
+        console.log('✅ DFS algorithm completed successfully', dfsResult);
         
         // Collect all results
         const allResults = [
@@ -112,13 +127,15 @@ const Index: React.FC = () => {
         setPlaybackState('stopped');
         setCurrentStep(0);
         
+        console.log('🎉 All algorithms completed successfully!', allResults);
+        
         toast({
           title: "Algorithms Completed",
           description: "All knight's tour algorithms have finished execution",
         });
         
       } catch (error) {
-        console.error('Error computing knight tours:', error);
+        console.error('❌ Error computing knight tours:', error);
         toast({
           title: "Computation Error",
           description: "An error occurred during algorithm execution",

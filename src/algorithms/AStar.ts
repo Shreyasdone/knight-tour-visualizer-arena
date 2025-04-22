@@ -1,4 +1,3 @@
-
 import { Position, AlgorithmResult, Step } from '../utils/types';
 import { positionToKey, getKnightMoves } from '../utils/helpers';
 
@@ -69,8 +68,34 @@ const solveAStar = (startPosition: Position, boardSize: number): AlgorithmResult
   
   let bestPath: Step[] = [...path];
   
+  // Safety limits to prevent infinite loops
+  const MAX_ITERATIONS = 1000000; // Set a reasonable limit based on board size
+  const MAX_EXECUTION_TIME = 5000; // 5 seconds max execution time
+  let iterations = 0;
+  
   // A* search main loop
   while (!pq.isEmpty()) {
+    // Check for infinite loop conditions
+    iterations++;
+    const currentTime = performance.now();
+    const elapsedTime = currentTime - startTime;
+    
+    if (iterations > MAX_ITERATIONS) {
+      console.warn(`A* search aborted after ${iterations} iterations - possible infinite loop detected`);
+      break;
+    }
+    
+    if (elapsedTime > MAX_EXECUTION_TIME) {
+      console.warn(`A* search aborted after ${elapsedTime.toFixed(2)}ms - timeout exceeded`);
+      break;
+    }
+    
+    // Check queue size to prevent memory issues
+    if (pq.queue.length > MAX_ITERATIONS) {
+      console.warn(`A* search aborted - priority queue size exceeded limit`);
+      break;
+    }
+    
     const current = pq.dequeue();
     
     if (!current) break;
